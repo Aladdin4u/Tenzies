@@ -9,7 +9,7 @@ function App() {
   const [dice, setDice] = useState(allNewDice())
   const [tenzies, setTenzies] = useState(false)
   const [numRoll, setNumRoll] = useState(0)
-  const [time, setTime] = useState(10)
+  const [time, setTime] = useState(0)
   const timeRef = useRef()
 
   useEffect(() => {
@@ -27,7 +27,7 @@ function App() {
   
   useEffect(() => {
     let interValid = setInterval(() => {
-      setTime(prev => prev - 1)
+      setTime(prev => prev + 1)
     },1000) 
     
     // return () => {
