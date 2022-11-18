@@ -9,7 +9,8 @@ function App() {
   const [dice, setDice] = useState(allNewDice())
   const [tenzies, setTenzies] = useState(false)
   const [numRoll, setNumRoll] = useState(0)
-  // const [time, setTime] = useState(0)
+  const [time, setTime] = useState(10)
+  const timeRef = useRef()
 
   useEffect(() => {
     const allHeld = dice.every(die => die.isHeld)
@@ -17,10 +18,31 @@ function App() {
     const allSameValue = dice.every(die => die.value === firstValue)
     if(allHeld && allSameValue) {
       setTenzies(true)
+      clearInterval(time)
     }
     
   }, [dice])
+
+
   
+  useEffect(() => {
+    let interValid = setInterval(() => {
+      setTime(prev => prev - 1)
+    },1000) 
+    
+    // return () => {
+      
+    // }
+    // function increase () {
+    //   if(!tenzies) {
+    //     setTime(prevTime => prevTime + 1)
+    //   } else {
+    //     clearInterval(interval)
+    //   }
+    // }
+    // const interval = setInterval(increase, 1000)
+  }, [])
+
   function generateNewDice() {
     return {
       value: Math.ceil(Math.random() * 6),
@@ -68,12 +90,12 @@ function App() {
       holdDice={() => holdDice(die.id)}
     />
   )) 
-  
    
   return (
     <main>
       {tenzies && <Confetti />}
       <h1 className='title'>Tenzies</h1>
+      <p>{time} timer</p>
       <p className='instruction'>
         {tenzies ? `You won with ${numRoll} rolls!` : 
         "Roll until all dice are the same. Click each die to freeze it at its current value between rolls."}
@@ -87,6 +109,7 @@ function App() {
       >
         {tenzies ? "New Game" : "Roll"}
         </button>
+        <button onClick={()=> clearInterval(timeRef.current) }>clear</button>
     </main>
   )
 }
