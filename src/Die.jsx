@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 
 const Die = (props) => {
 
@@ -19,7 +19,9 @@ const Die = (props) => {
     
     const styles = {
         opacity: props.isHeld ? "0.5" : "1",
-        // backgroundColor: props.isHeld ? "#59E391" : "white"
+        border: props.isHeld ? "2px solid gray" : "",
+        // overflow: props.isHeld ? "hidden" : "",
+        // transition: props.isHeld ? ".5s ease-in-out" : ".5s ease-in-out"
     }
     return (
         <div 
@@ -27,9 +29,6 @@ const Die = (props) => {
             style={styles}
             onClick={props.holdDice}
         >
-            {/* <h2 className='die-num'> */}
-            {/* {props.value} */}
-            {/* </h2> */}
             {diceImg}
         </div>
     );

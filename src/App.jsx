@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Die from './Die'
 import {nanoid} from 'nanoid'
 import Confetti from 'react-confetti'
@@ -10,7 +10,6 @@ function App() {
   const [tenzies, setTenzies] = useState(false)
   const [numRoll, setNumRoll] = useState(0)
   const [time, setTime] = useState(0)
-  const timeRef = useRef()
 
   useEffect(() => {
     const allHeld = dice.every(die => die.isHeld)
@@ -18,30 +17,25 @@ function App() {
     const allSameValue = dice.every(die => die.value === firstValue)
     if(allHeld && allSameValue) {
       setTenzies(true)
-      clearInterval(time)
     }
     
-  }, [dice])
-
-
-  
+  }, [dice]) 
+    
   useEffect(() => {
     let interValid = setInterval(() => {
       setTime(prev => prev + 1)
-    },1000) 
-    
-    // return () => {
-      
-    // }
-    // function increase () {
-    //   if(!tenzies) {
-    //     setTime(prevTime => prevTime + 1)
-    //   } else {
-    //     clearInterval(interval)
-    //   }
-    // }
-    // const interval = setInterval(increase, 1000)
-  }, [])
+    },1000);
+
+    if(tenzies){
+      setTimeout(() => {
+        clearInterval(interValid)
+      });
+    }
+
+    return () => {
+      clearInterval(interValid);
+    }
+  }, [tenzies])
 
   function generateNewDice() {
     return {
@@ -69,6 +63,8 @@ function App() {
       setNumRoll(prevRoll => (prevRoll + 1))
     } else {
       setTenzies(false)
+      setTime(0)
+      setNumRoll(0)
       setDice(allNewDice())
     }
   }
@@ -94,12 +90,14 @@ function App() {
   return (
     <main>
       {tenzies && <Confetti />}
-      <h1 className='title'>Tenzies</h1>
-      <p>{time} timer</p>
-      <p className='instruction'>
-        {tenzies ? `You won with ${numRoll} rolls!` : 
-        "Roll until all dice are the same. Click each die to freeze it at its current value between rolls."}
-        </p>
+      <div className='instruction-container'>
+        <h1 className='title'>Tenzies</h1>
+        <p><b>Timer: </b>{time} </p>
+        <p className='instruction'>
+          {tenzies ? `You won with ${numRoll} rolls!` : 
+          "Roll until all dice are the same. Click each die to freeze it at its current value between rolls."}
+          </p>
+      </div>
       <div className='dice-container'>
         {diceElement}
       </div>  
@@ -109,7 +107,6 @@ function App() {
       >
         {tenzies ? "New Game" : "Roll"}
         </button>
-        <button onClick={()=> clearInterval(timeRef.current) }>clear</button>
     </main>
   )
 }
